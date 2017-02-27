@@ -1,0 +1,8 @@
+---
+- name: Deploy docker engine
+  hosts: docker_servers
+  remote_user: '{{ user }}'
+
+  roles:
+    - common
+    - docker

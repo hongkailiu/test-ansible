@@ -1,0 +1,4 @@
+127.0.0.1 ansible_ssh_port=22222
+
+[docker_servers]
+127.0.0.1

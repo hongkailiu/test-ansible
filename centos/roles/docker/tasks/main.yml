@@ -1,0 +1,51 @@
+---
+- name: Disable selinux
+  become: yes
+  become_method: sudo
+  selinux:
+    state: disabled
+
+- name: Disable firewalld
+  become: yes
+  become_method: sudo
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: False
+
+- name: Install yum-utils
+  become: yes
+  become_method: sudo
+  yum:
+    name: yum-utils
+    state: present
+
+- name: Add docker repo
+  become: yes
+  become_method: sudo
+  shell: yum-config-manager --add-repo 'https://docs.docker.com/engine/installation/linux/repo_files/centos/docker.repo' >> /tmp/shell-result.txt
+  args:
+    executable: /bin/bash
+
+- name: Install docker
+  become: yes
+  become_method: sudo
+  yum:
+    name: docker-engine 
+    state: latest
+
+- name: Start docker
+  become: yes
+  become_method: sudo
+  systemd:
+    name: docker
+    state: started
+    enabled: True
+
+- name: Execute post-install steps
+  become: yes
+  become_method: sudo
+  command: "{{ item }}"
+  with_items:
+    #- groupadd docker
+    - usermod -aG docker '{{ user }}'
